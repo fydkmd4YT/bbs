@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "Ezan Vakti",
-    "slug": "mobile",
+    "slug": "ezan-vakti",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "mobile",
+    "scheme": "ezanvakti",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -14,10 +14,17 @@
       "backgroundColor": "#0D0520"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bombomteam.ezanvakti"
     },
     "android": {
-      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"]
+      "package": "com.bombomteam.ezanvakti",
+      "versionCode": 1,
+      "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icon.png",
+        "backgroundColor": "#0D0520"
+      }
     },
     "web": {
       "favicon": "./assets/images/icon.png"
@@ -35,6 +42,13 @@
         "expo-location",
         {
           "locationAlwaysAndWhenInUsePermission": "Namaz vakitlerini hesaplamak için konumunuza ihtiyaç duyulmaktadır."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#7B2FBE"
         }
       ]
     ],
