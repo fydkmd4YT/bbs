@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/ezan-web/"
+title = "Ezan Vakti Web"
+version = "1.0.0"
+id = "artifacts/ezan-web"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/ezan-web/" ]
+localPort = 24562
+
+[services.development]
+run = "pnpm --filter @workspace/ezan-web run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ezan-web", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/ezan-web/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24562"
+BASE_PATH = "/ezan-web/"

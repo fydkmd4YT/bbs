@@ -1,0 +1,25 @@
+{
+  "name": "Ezan Vakti",
+  "short_name": "Ezan Vakti",
+  "description": "Namaz vakitlerini takip edin – Bombom Team",
+  "start_url": "/ezan-web/",
+  "scope": "/ezan-web/",
+  "display": "standalone",
+  "background_color": "#0D0520",
+  "theme_color": "#7B2FBE",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/ezan-web/logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/ezan-web/logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

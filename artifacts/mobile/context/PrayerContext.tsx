@@ -9,10 +9,10 @@ export type PrayerKey = 'fajr' | 'dhuhr' | 'asr' | 'maghrib' | 'isha';
 
 export const PRAYER_NAMES: Record<PrayerKey, string> = {
   fajr: 'Sabah',
-  dhuhr: 'Ogle',
-  asr: 'Ikindi',
-  maghrib: 'Aksam',
-  isha: 'Yatsi',
+  dhuhr: 'Öğle',
+  asr: 'İkindi',
+  maghrib: 'Akşam',
+  isha: 'Yatsı',
 };
 
 export const PRAYER_KEYS: PrayerKey[] = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
@@ -58,62 +58,102 @@ interface PrayerContextType {
 
 const PrayerContext = createContext<PrayerContextType | null>(null);
 
-interface RawTimes {
-  fajr: Date;
-  dhuhr: Date;
-  asr: Date;
-  maghrib: Date;
-  isha: Date;
+type RawTimes = Record<PrayerKey, Date>;
+
+// --- Local adhan fallback ---
+function computeLocal(lat: number, lng: number, date: Date): RawTimes {
+  const coords = new Coordinates(lat, lng);
+  const pt = new PrayerTimes(coords, date, CalculationMethod.Turkey());
+  return { fajr: pt.fajr, dhuhr: pt.dhuhr, asr: pt.asr, maghrib: pt.maghrib, isha: pt.isha };
 }
 
-function computeTimes(lat: number, lng: number, date: Date): RawTimes {
-  const coords = new Coordinates(lat, lng);
-  const params = CalculationMethod.Turkey();
-  const pt = new PrayerTimes(coords, date, params);
-  return { fajr: pt.fajr, dhuhr: pt.dhuhr, asr: pt.asr, maghrib: pt.maghrib, isha: pt.isha };
+// --- Aladhan API (Diyanet method = 13) ---
+async function fetchTimesFromAPI(lat: number, lng: number, date: Date): Promise<RawTimes> {
+  const dd = String(date.getDate()).padStart(2, '0');
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  const res = await fetch(
+    `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=${lat}&longitude=${lng}&method=13`,
+  );
+  if (!res.ok) throw new Error('API error');
+  const json = await res.json();
+  if (json.code !== 200) throw new Error('API error');
+  const t = json.data.timings as Record<string, string>;
+
+  const parse = (s: string) => {
+    const clean = s.replace(/\s*\(.*?\)/, '');
+    const [h, m] = clean.split(':').map(Number);
+    const d = new Date(date);
+    d.setHours(h, m, 0, 0);
+    return d;
+  };
+
+  return {
+    fajr: parse(t['Fajr']),
+    dhuhr: parse(t['Dhuhr']),
+    asr: parse(t['Asr']),
+    maghrib: parse(t['Maghrib']),
+    isha: parse(t['Isha']),
+  };
+}
+
+// Fetch with adhan fallback
+async function fetchTimes(lat: number, lng: number, date: Date): Promise<RawTimes> {
+  try {
+    return await fetchTimesFromAPI(lat, lng, date);
+  } catch {
+    return computeLocal(lat, lng, date);
+  }
+}
+
+// --- Nominatim reverse geocoding (all platforms) ---
+async function fetchCityName(lat: number, lng: number): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=tr`,
+      { headers: { 'User-Agent': 'EzanVakti/1.0' } },
+    );
+    const json = await res.json();
+    const a = json.address ?? {};
+    return a.city ?? a.town ?? a.municipality ?? a.county ?? a.state ?? 'Bilinmiyor';
+  } catch {
+    return 'Bilinmiyor';
+  }
 }
 
 function formatCountdown(diffMs: number): string {
   if (diffMs <= 0) return 'Vakit geldi';
-  const totalSeconds = Math.floor(diffMs / 1000);
-  const hours = Math.floor(totalSeconds / 3600);
-  const minutes = Math.floor((totalSeconds % 3600) / 60);
-  const seconds = totalSeconds % 60;
-  const ss = seconds.toString().padStart(2, '0');
-  const mm = minutes.toString().padStart(2, '0');
-  if (hours > 0) return `${hours}:${mm}:${ss}`;
-  return `${mm}:${ss}`;
+  const total = Math.floor(diffMs / 1000);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  const mm = String(m).padStart(2, '0');
+  const ss = String(s).padStart(2, '0');
+  return h > 0 ? `${h}:${mm}:${ss}` : `${mm}:${ss}`;
 }
 
 async function scheduleReminders(
   userName: string,
-  lat: number,
-  lng: number,
   settings: ReminderSettings,
+  todayTimes: RawTimes,
+  tomorrowTimes: RawTimes,
 ): Promise<void> {
   if (Platform.OS === 'web' || !userName) return;
   try {
     const { status } = await Notifications.getPermissionsAsync();
     if (status !== 'granted') return;
-
     await Notifications.cancelAllScheduledNotificationsAsync();
-
     const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    for (const date of [now, tomorrow]) {
-      const times = computeTimes(lat, lng, date);
+    for (const [times] of [[todayTimes], [tomorrowTimes]] as [RawTimes][]) {
       for (const key of PRAYER_KEYS) {
         const minutes = settings[key];
         if (!minutes) continue;
         const notifTime = new Date(times[key].getTime() - minutes * 60 * 1000);
         if (notifTime <= now) continue;
-
         await Notifications.scheduleNotificationAsync({
           content: {
             title: 'Ezan Vakti',
-            body: `${userName}, ${PRAYER_NAMES[key]} vaktine ${minutes} dakika kaldi`,
+            body: `${userName}, ${PRAYER_NAMES[key]} vaktine ${minutes} dakika kaldı`,
             sound: true,
           },
           trigger: { date: notifTime } as Notifications.DateTriggerInput,
@@ -126,12 +166,14 @@ async function scheduleReminders(
 export function PrayerProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [coords, setCoords] = useState({ lat: 41.0082, lng: 28.9784 });
-  const [locationName, setLocationName] = useState('Istanbul');
+  const [locationName, setLocationName] = useState('İstanbul');
   const [settings, setSettings] = useState<ReminderSettings>(DEFAULT_SETTINGS);
   const [prayers, setPrayers] = useState<PrayerInfo[]>([]);
   const [nextPrayer, setNextPrayer] = useState<PrayerInfo | null>(null);
   const [countdown, setCountdown] = useState('');
   const [userName, setUserNameState] = useState('');
+  const [todayTimes, setTodayTimes] = useState<RawTimes | null>(null);
+  const [tomorrowTimes, setTomorrowTimes] = useState<RawTimes | null>(null);
 
   // Load persisted data
   useEffect(() => {
@@ -146,48 +188,63 @@ export function PrayerProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  // Get location
+  // Get location + city name
   useEffect(() => {
     async function getLocation() {
       try {
         if (Platform.OS === 'web') {
           if (typeof navigator !== 'undefined' && navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-              (pos) => setCoords({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+              async (pos) => {
+                const { latitude, longitude } = pos.coords;
+                setCoords({ lat: latitude, lng: longitude });
+                const name = await fetchCityName(latitude, longitude);
+                setLocationName(name);
+              },
               () => {},
+              { timeout: 6000 },
             );
           }
-          setLoading(false);
           return;
         }
         const { status } = await Location.requestForegroundPermissionsAsync();
         if (status === 'granted') {
           const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
-          setCoords({ lat: loc.coords.latitude, lng: loc.coords.longitude });
-          try {
-            const addresses = await Location.reverseGeocodeAsync({
-              latitude: loc.coords.latitude,
-              longitude: loc.coords.longitude,
-            });
-            if (addresses.length > 0) {
-              const addr = addresses[0];
-              const city = addr.city ?? addr.district ?? addr.region ?? '';
-              if (city) setLocationName(city);
-            }
-          } catch {}
+          const { latitude, longitude } = loc.coords;
+          setCoords({ lat: latitude, lng: longitude });
+          const name = await fetchCityName(latitude, longitude);
+          setLocationName(name);
         }
       } catch {}
-      setLoading(false);
     }
     getLocation();
   }, []);
 
-  // Live countdown + prayer list (updates every second)
+  // Fetch prayer times from API (today + tomorrow)
   useEffect(() => {
+    async function load() {
+      setLoading(true);
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const [t, tm] = await Promise.all([
+        fetchTimes(coords.lat, coords.lng, today),
+        fetchTimes(coords.lat, coords.lng, tomorrow),
+      ]);
+      setTodayTimes(t);
+      setTomorrowTimes(tm);
+      setLoading(false);
+    }
+    load();
+  }, [coords]);
+
+  // Live countdown + prayer list (every second, uses cached times)
+  useEffect(() => {
+    if (!todayTimes) return;
+
     const update = () => {
       const now = new Date();
-      const todayTimes = computeTimes(coords.lat, coords.lng, now);
-      const upcomingKey = PRAYER_KEYS.find((key) => todayTimes[key] > now);
+      const upcomingKey = PRAYER_KEYS.find((k) => todayTimes[k] > now);
 
       if (upcomingKey) {
         const infos: PrayerInfo[] = PRAYER_KEYS.map((key) => ({
@@ -201,10 +258,7 @@ export function PrayerProvider({ children }: { children: React.ReactNode }) {
         const next = infos.find((p) => p.key === upcomingKey)!;
         setNextPrayer(next);
         setCountdown(formatCountdown(next.time.getTime() - now.getTime()));
-      } else {
-        const tomorrow = new Date(now);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const tomorrowTimes = computeTimes(coords.lat, coords.lng, tomorrow);
+      } else if (tomorrowTimes) {
         const infos: PrayerInfo[] = PRAYER_KEYS.map((key) => ({
           key,
           name: PRAYER_NAMES[key],
@@ -226,17 +280,16 @@ export function PrayerProvider({ children }: { children: React.ReactNode }) {
     };
 
     update();
-    setLoading(false);
     const interval = setInterval(update, 1000);
     return () => clearInterval(interval);
-  }, [coords]);
+  }, [todayTimes, tomorrowTimes]);
 
-  // Schedule notifications whenever settings, coords, or userName change
+  // Schedule notifications when times, settings or userName change
   useEffect(() => {
-    if (userName) {
-      scheduleReminders(userName, coords.lat, coords.lng, settings);
+    if (userName && todayTimes && tomorrowTimes) {
+      scheduleReminders(userName, settings, todayTimes, tomorrowTimes);
     }
-  }, [userName, coords, settings]);
+  }, [userName, settings, todayTimes, tomorrowTimes]);
 
   const updateReminder = useCallback((key: PrayerKey, minutes: number) => {
     setSettings((prev) => {

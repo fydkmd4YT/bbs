@@ -80,20 +80,25 @@ export default function HomeScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
+          {/* Location */}
           <View style={styles.locationRow}>
             <Ionicons name="location-outline" size={14} color={colors.mutedForeground} />
             <Text style={[styles.locationText, { color: colors.mutedForeground }]}>
               {locationName}
             </Text>
           </View>
+
+          {/* Date */}
           <Text style={[styles.dateText, { color: colors.foreground }]}>
             {getTurkishDate()}
           </Text>
+
+          {/* Greeting */}
           {userName ? (
             <View style={styles.greetingRow}>
-              <Ionicons name="hand-right-outline" size={18} color={colors.primary} />
+              <Ionicons name="sunny-outline" size={18} color={colors.primary} />
               <Text style={[styles.greetingText, { color: colors.primary }]}>
-                Merhaba, {userName}
+                Bugün Nasılsınız, {userName}?
               </Text>
             </View>
           ) : null}
@@ -108,7 +113,7 @@ export default function HomeScreen() {
               end={{ x: 1, y: 1 }}
               style={[styles.heroCard, { borderRadius: colors.radius + 4 }]}
             >
-              <Text style={styles.heroLabel}>Siradaki Namaz</Text>
+              <Text style={styles.heroLabel}>Sıradaki Namaz</Text>
               <Text style={styles.heroName}>{nextPrayer.name}</Text>
               <View style={styles.countdownRow}>
                 <Ionicons name="time-outline" size={18} color="rgba(255,255,255,0.8)" />
@@ -128,7 +133,7 @@ export default function HomeScreen() {
         {/* Prayer List */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.mutedForeground }]}>
-            Bugunun Vakitleri
+            Bugünün Vakitleri
           </Text>
           {prayers.map((prayer) => (
             <PrayerCard key={prayer.key} prayer={prayer} />
@@ -163,10 +168,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginTop: 2,
+    marginTop: 4,
   },
   greetingText: {
-    fontSize: 16,
+    fontSize: 17,
     fontFamily: 'Inter_600SemiBold',
   },
   heroWrap: { marginBottom: 4 },
