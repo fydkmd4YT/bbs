@@ -17,19 +17,16 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies
-        run: npm install --legacy-peer-deps || npx pnpm install --no-frozen-lockfile || true
+        run: pnpm install --no-frozen-lockfile || npm install
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Configure EAS Project
-        run: |
-          eas project:init --non-interactive || true
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
-      - name: Run EAS Build
-        run: eas build --platform android --profile preview --non-interactive
+      - name: Build on EAS
+        run: eas build --platform android --profile preview
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
