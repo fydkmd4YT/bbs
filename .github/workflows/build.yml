@@ -27,6 +27,6 @@ jobs:
         run: npm install -g eas-cli
 
       - name: Build on EAS
-        run: eas build --platform android --profile preview
+        run: yes | eas build --platform android --profile preview --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
