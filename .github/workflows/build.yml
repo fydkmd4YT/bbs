@@ -1,0 +1,45 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build on EAS
+        run: eas build --platform android --profile preview --non-interactive
+    ```
+
+### 3. Expo Token Tanımlama (Gerekli Adım)
+GitHub'ın senin adına Expo hesabına bağlanıp build alabilmesi için bir "Token" vermemiz gerekir:
+1. Expo hesabına internet üzerinden giriş yap, hesap ayarlarından (Access Tokens bölümünden) yeni bir **EAS Token** oluştur ve kopyala.
+2. GitHub'da deponun üst sekmesindeki **Settings** (Ayarlar) bölümüne gir.
+3. Soldaki menüden **Secrets and variables** -> **Actions** yolunu izle.
+4. Sağ üstteki **New repository secret** butonuna tıkla.
+5. Name kısmına büyük harflerle **`EXPO_TOKEN`** yaz, Secret kısmına da Expo'dan kopyaladığın token'ı yapıştır ve **Add secret** diyerek kaydet.
+
+### 4. Build İşletimini Başlatma
+1. GitHub'da deponun üst menüsünden **Eylemler (Actions)** sekmesine tıkla.
+2. Sol tarafta **"Build Android APK"** yazısını göreceksin, ona tıkla.
+3. Sağ tarafta çıkan **"Run workflow"** butonuna basarak süreci başlat.
+
+Birkaç dakika içinde GitHub senin için bulutta APK dosyanı derleyecek. İşlem tamamlandığında Actions detay sayfasına girerek oluşan APK'yı bilgisayarına indirebileceksin!
