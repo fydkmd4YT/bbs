@@ -17,13 +17,26 @@ jobs:
         with:
           node-version: 18
 
+      - name: Install dependencies
+        run: npm install
+
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Init EAS Project
-        run: eas init --id "" --non-interactive || true
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: Create eas.json automatically
+        run: |
+          echo '{
+            "cli": {
+              "version": ">= 0.52.0"
+            },
+            "build": {
+              "preview": {
+                "android": {
+                  "buildType": "apk"
+                }
+              }
+            }
+          }' > eas.json
 
       - name: Build on EAS
         run: eas build --platform android --profile preview --non-interactive
