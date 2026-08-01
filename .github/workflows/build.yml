@@ -23,25 +23,13 @@ jobs:
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Run EAS Build
+      - name: Configure EAS Project
         run: |
-          if [ -f "eas.json" ]; then
-            eas build --platform android --profile preview --non-interactive
-          else
-            echo '{
-              "cli": {
-                "version": ">= 0.52.0",
-                "appVersionSource": "remote"
-              },
-              "build": {
-                "preview": {
-                  "android": {
-                    "buildType": "apk"
-                  }
-                }
-              }
-            }' > eas.json
-            eas build --platform android --profile preview --non-interactive
-          fi
+          eas project:init --non-interactive || true
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Run EAS Build
+        run: eas build --platform android --profile preview --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
