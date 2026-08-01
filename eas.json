@@ -6,9 +6,14 @@
   "build": {
     "preview": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "credentialsSource": "remote"
       }
     },
-    "production": {}
+    "production": {
+      "android": {
+        "credentialsSource": "remote"
+      }
+    }
   }
 }
