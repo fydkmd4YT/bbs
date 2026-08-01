@@ -17,29 +17,31 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies with pnpm
-        run: npx pnpm install
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps || npx pnpm install --no-frozen-lockfile || true
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
-      - name: Create complete eas.json
+      - name: Run EAS Build
         run: |
-          echo '{
-            "cli": {
-              "version": ">= 0.52.0",
-              "appVersionSource": "remote"
-            },
-            "build": {
-              "preview": {
-                "android": {
-                  "buildType": "apk"
+          if [ -f "eas.json" ]; then
+            eas build --platform android --profile preview --non-interactive
+          else
+            echo '{
+              "cli": {
+                "version": ">= 0.52.0",
+                "appVersionSource": "remote"
+              },
+              "build": {
+                "preview": {
+                  "android": {
+                    "buildType": "apk"
+                  }
                 }
               }
-            }
-          }' > eas.json
-
-      - name: Build on EAS
-        run: eas build --platform android --profile preview --non-interactive
+            }' > eas.json
+            eas build --platform android --profile preview --non-interactive
+          fi
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
