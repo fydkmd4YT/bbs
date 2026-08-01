@@ -15,19 +15,13 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "package": "com.anonim.ezanvaktiuygulama"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
         "projectId": "986e4143-4fdb-457a-912d-e20b87fa4e26"
       }
-    }
+    },
+    "owner": "bombom-team"
   }
 }
