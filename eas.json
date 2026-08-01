@@ -6,8 +6,7 @@
   "build": {
     "preview": {
       "android": {
-        "buildType": "apk",
-        "android위원": {}
+        "buildType": "apk"
       }
     },
     "production": {}
