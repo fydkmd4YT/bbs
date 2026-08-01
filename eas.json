@@ -6,8 +6,7 @@
   "build": {
     "preview": {
       "android": {
-        "buildType": "apk",
-        "credentialsSource": "remote"
+        "buildType": "apk"
       }
     },
     "production": {}
