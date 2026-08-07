@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Ezan Vakti Alarm",
+    "slug": "workspace",
+    "extra": {
+      "eas": {
+        "projectId": "ded08ec0-ea74-4706-a71b-684f96b59fda"
+      }
+    },
+    "android": {
+      "package": "com.fydkmd4bbs.workspace"
+    }
+  }
+}
