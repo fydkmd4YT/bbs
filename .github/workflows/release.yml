@@ -1,21 +1,21 @@
-name: Release Build
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            # Buraya varsa eklenecek dosya yollarını yazabilirsin
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+name: Release Build 
+ 
+on: 
+  push: 
+    tags: 
+      - 'v*' 
+ 
+permissions: 
+  contents: write 
+ 
+jobs: 
+  build: 
+    runs-on: ubuntu-latest 
+    steps: 
+      - name: Checkout code 
+        uses: actions/checkout@v4 
+ 
+      - name: Create Release 
+        uses: softprops/action-gh-release@v1 
+        env: 
+          GITHUB_TOKEN: ${${secrets.GITHUB_TOKEN}} 
