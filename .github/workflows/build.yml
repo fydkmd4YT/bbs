@@ -1,11 +1,8 @@
 name: Build Android APK
 
 on:
-<<<<<<< HEAD
-=======
   push:
     branches: [ "main" ]
->>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71
   workflow_dispatch:
 
 jobs:
@@ -20,7 +17,6 @@ jobs:
         with:
           node-version: 18
 
-<<<<<<< HEAD
       - name: Setup Expo
         uses: expo/expo-github-action@v8
         with:
@@ -32,19 +28,6 @@ jobs:
 
       - name: Build APK
         run: npx eas-cli build --platform android --profile preview --non-interactive
-=======
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile || npm install
-
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
-
-      - name: Build on EAS
-        run: eas build --platform android --profile preview --non-interactive --no-wait
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           CI: "1"
->>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71
