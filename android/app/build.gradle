@@ -132,7 +132,7 @@ android {
     }
 
     defaultConfig {
-        applicationId 'com.fydkmd4bbs.workspace'
+        applicationId 'com.fydkmd4bbs.ezanvaktiuygulama'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,10 +1,6 @@
 {
   "cli": {
-<<<<<<< HEAD
-=======
-    "version": ">= 5.0.0",
->>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71
-    "appVersionSource": "remote"
+    "version": ">= 5.0.0"
   },
   "build": {
     "preview": {
@@ -12,10 +8,19 @@
         "buildType": "apk"
       }
     },
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "android": {
+        "developmentClient": true
+      }
+    },
+    "production": {}
+  },
+  "submit": {
     "production": {}
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71

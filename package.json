@@ -1,8 +1,6 @@
 {
-<<<<<<< HEAD
-  "name": "ezan-vakti-alarm",
+  "name": "ezanvaktiuygulama",
   "version": "1.0.0",
-  "private": true,
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -10,58 +8,26 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "~40.0.0",
+    "expo": "~51.0.0",
+    "expo-status-bar": "~1.12.1",
     "react": "16.13.1",
-    "react-dom": "16.13.1",
     "react-native": "~0.63.4",
-    "react-native-web": "~0.13.13",
     "expo-splash-screen": "~0.8.0",
-    "expo-status-bar": "~1.0.3",
     "expo-updates": "~0.4.0",
+    "react-dom": "16.13.1",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-reanimated": "~1.13.0",
     "react-native-screens": "~2.15.0",
-    "react-native-unimodules": "~0.12.0"
-  },
-  "devDependencies": {
-    "@types/react": "~16.9.35",
-    "@types/react-native": "~0.63.2",
-    "typescript": "~4.0.0",
-    "@babel/core": "^7.9.0",
-    "babel-jest": "~25.2.6",
-    "jest": "~25.2.6",
-    "react-test-renderer": "~16.13.1"
-  },
-  "expo": {
-    "name": "Ezan Vakti Alarm",
-    "slug": "workspace",
-    "sdkVersion": "40.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ]
-  }
-=======
-  "name": "ezanvaktiuygulama",
-  "version": "1.0.0",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "expo": "~51.0.0",
-    "expo-status-bar": "~1.12.1",
-    "react": "18.3.1",
-    "react-native": "0.74.5"
+    "react-native-unimodules": "~0.12.0",
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "prettier": "^3.9.6",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "babel-jest": "~25.2.6",
+    "jest": "~25.2.6",
+    "react-test-renderer": "~16.13.1"
   },
   "private": true
->>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71
 }

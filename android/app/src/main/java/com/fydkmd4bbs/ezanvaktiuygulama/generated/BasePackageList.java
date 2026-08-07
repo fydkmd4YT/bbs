@@ -1,4 +1,4 @@
-package com.fydkmd4bbs.workspace.generated;
+package com.fydkmd4bbs.ezanvaktiuygulama.generated;
 
 import java.util.Arrays;
 import java.util.List;

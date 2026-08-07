@@ -1,4 +1,4 @@
-package com.fydkmd4bbs.workspace;
+package com.fydkmd4bbs.ezanvaktiuygulama;
 
 import android.os.Bundle;
 

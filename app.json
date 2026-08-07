@@ -1,42 +1,30 @@
 {
-  "expo": {
-<<<<<<< HEAD
-    "name": "Ezan Vakti Alarm",
-    "slug": "workspace",
-    "extra": {
-      "eas": {
-        "projectId": "ded08ec0-ea74-4706-a71b-684f96b59fda"
-      }
-    },
-    "android": {
-      "package": "com.fydkmd4bbs.workspace"
+  "name": "ezanvaktiuygulama",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~51.0.0",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.3.1",
+    "react-native": "0.74.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "prettier": "^3.9.6",
+    "typescript": "~5.9.3"
+  },
+  "private": true,
+  "android": {
+    "package": "com.fydkmd4bbs.ezanvaktiuygulama"
+  },
+  "extra": {
+    "eas": {
+      "projectId": "565b84b2-2786-42d0-a1fb-03f3a5f5b65c"
     }
   }
 }
-=======
-    "name": "ezanvaktiuygulama",
-    "slug": "ezanvaktiuygulama",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "package": "com.anonim.ezanvaktiuygulama"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "986e4143-4fdb-457a-912d-e20b87fa4e26"
-      }
-    },
-    "owner": "bombom-team"
-  }
-}
->>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71
