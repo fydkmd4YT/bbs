@@ -1,5 +1,6 @@
 {
   "expo": {
+<<<<<<< HEAD
     "name": "Ezan Vakti Alarm",
     "slug": "workspace",
     "extra": {
@@ -12,3 +13,30 @@
     }
   }
 }
+=======
+    "name": "ezanvaktiuygulama",
+    "slug": "ezanvaktiuygulama",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.anonim.ezanvaktiuygulama"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "986e4143-4fdb-457a-912d-e20b87fa4e26"
+      }
+    },
+    "owner": "bombom-team"
+  }
+}
+>>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71

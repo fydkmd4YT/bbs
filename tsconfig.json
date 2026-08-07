@@ -12,6 +12,7 @@
     {
       "path": "./lib/api-zod"
     }
+<<<<<<< HEAD
   ],
   "compilerOptions": {
     "jsx": "react-native",
@@ -27,4 +28,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node"
   }
+=======
+  ]
+>>>>>>> 66dfb8ba332df4aefbdeae4ef6b0efc58c417f71
 }
